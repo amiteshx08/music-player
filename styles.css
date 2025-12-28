@@ -1,0 +1,74 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#music-player{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 360px;
+    padding: 10px;
+    border: 1px solid rgb(36, 31, 31);
+    height: 100vh;
+}
+
+#upper-deck{
+    align-self: flex-start;
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}
+#upper-deck p{
+    font-size: 20px;
+}
+#upper-deck p{
+    margin: 8px 0px;
+}
+#upper-deck i:hover{
+    cursor: pointer;
+}
+
+#song-image{
+    height: 300px;
+    width: 300px;
+    /* border-radius: 10px; */
+}
+
+#song-name{
+    margin-top: 20px;
+    font-size: 2em;
+}
+#music-buttons{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+#music-buttons i{
+    padding: 10px;
+    &:hover{
+        cursor: pointer;
+    }
+}
+#slider {
+  -webkit-appearance: none; /* Chrome, Safari */
+  appearance: none;
+  width: 300px;
+  height: 2px;
+  margin-top: 20px;
+  background: gray;   /* track color */
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+#slider::-webkit-slider-thumb{
+    
+}
+
+.dark{
+    background-color: red;
+}
