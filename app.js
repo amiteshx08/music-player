@@ -8,8 +8,9 @@ const prevsongButton = document.getElementById("prev-song");
 const nextsongButton = document.getElementById("next-song");
 
 const toggleButton = document.getElementById("toggle-button");
-const main = document.getElementById("main-card");
 
+
+const musicPlayer = document.querySelector('.music-player');
 const shuffleButton = document.getElementById("shuffle-song");
 const repeatButton = document.getElementById("repeat-song");
 const songs = [
@@ -37,19 +38,11 @@ const audio = document.createElement("audio");
 let currentsongIndex = 0;
 updateSong();
 
-let isDarkMode = false;
+
 toggleButton.addEventListener("click", function () {
-  if (!isDarkMode) {
-    toggleButton.classList.remove("fa-toggle-off");
-    toggleButton.classList.add("fa-toggle-on");
-    main.classList.toggle("dark");
-    isDarkMode = true;
-  } else {
-    toggleButton.classList.remove("fa-toggle-on");
-    toggleButton.classList.add("fa-toggle-off");
-    main.classList.toggle("dark");
-    isDarkMode = false;
-  }
+  toggleButton.classList.toggle("fa-toggle-on");
+  toggleButton.classList.toggle("fa-toggle-off");
+  musicPlayer.classList.toggle("dark");
 });
 
 prevsongButton.addEventListener("click", function () {
