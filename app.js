@@ -33,7 +33,7 @@ const songs = [
     audio: "audios/yeh-shaam-mastani.mp3",
   },
 ];
-
+const songsLen = songs.length - 1;
 const audio = document.createElement("audio");
 let currentsongIndex = 0;
 updateSong();
@@ -51,6 +51,7 @@ prevsongButton.addEventListener("click", function () {
   }
   currentsongIndex--;
   updateSong();
+
 });
 
 nextsongButton.addEventListener("click", function () {
@@ -61,34 +62,28 @@ nextsongButton.addEventListener("click", function () {
   updateSong();
 });
 
-playpauseButton.addEventListener("click", function () {
+audio.addEventListener("play", () => {
+  playpauseButton.classList.remove("fa-circle-play");
+  playpauseButton.classList.add("fa-circle-pause");
+});
+
+audio.addEventListener("pause", () => {
+  playpauseButton.classList.remove("fa-circle-pause");
+  playpauseButton.classList.add("fa-circle-play");
+});
+
+playpauseButton.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playpauseButton.classList.remove("fa-circle-play");
-    playpauseButton.classList.add("fa-circle-pause");
   } else {
     audio.pause();
-    playpauseButton.classList.remove("fa-circle-pause");
-    playpauseButton.classList.add("fa-circle-play");
   }
 });
 
-shuffleButton.addEventListener("click", function () {
-  currentsongIndex = Math.floor(Math.random() * (2 + 1));
-  // console.log(currentsongIndex);
-  // Math.floor(Math.random() * (max + 1)) Random Number generation formula inclusive;
-  const song = songs[currentsongIndex];
-  songImage.src = song.image;
-  songName.innerText = song.name;
-  songArtist.innerText = song.artist;
 
-  audio.src = song.audio;
-  playpauseButton.classList.remove("fa-circle-pause");
-  playpauseButton.classList.add("fa-circle-play");
-  audio.onloadedmetadata = function () {
-    songSlider.value = 0;
-    songSlider.max = audio.duration;
-  };
+shuffleButton.addEventListener("click", function () {
+  currentsongIndex = Math.floor(Math.random() * (songsLen + 1));
+  updateSong()
 });
 
 repeatButton.addEventListener("click", function () {
@@ -109,6 +104,14 @@ function updateSong() {
     songSlider.max = audio.duration;
   };
 }
+
+function autoPlay(){
+  currentsongIndex++;
+  if(currentsongIndex > songs.length - 1) return;
+  updateSong()
+  audio.play()
+}
+audio.addEventListener('ended', autoPlay)
 
 songSlider.addEventListener("change", function () {
   audio.currentTime = songSlider.value;
