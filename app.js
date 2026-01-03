@@ -1,3 +1,4 @@
+//hook all the tags
 const songImage = document.getElementById("song-image");
 const songName = document.getElementById("song-name");
 const songArtist = document.getElementById("song-artist");
@@ -9,10 +10,11 @@ const nextsongButton = document.getElementById("next-song");
 
 const toggleButton = document.getElementById("toggle-button");
 
-
 const musicPlayer = document.querySelector('.music-player');
 const shuffleButton = document.getElementById("shuffle-song");
 const repeatButton = document.getElementById("repeat-song");
+
+//songs array of objects
 const songs = [
   {
     image: "images/musafir-hu-yaaron.jpeg",
@@ -33,35 +35,44 @@ const songs = [
     audio: "audios/yeh-shaam-mastani.mp3",
   },
 ];
-const songsLen = songs.length - 1;
+
 const audio = document.createElement("audio");
-let currentsongIndex = 0;
+
+const savedIndex = localStorage.getItem('lastSongIndex')
+
+let currentsongIndex = savedIndex !== null ? Number(savedIndex) : 0;
+
 updateSong();
 
-
-toggleButton.addEventListener("click", function () {
+//toggle button for background change
+toggleButton.addEventListener("click", () => {
   toggleButton.classList.toggle("fa-toggle-on");
   toggleButton.classList.toggle("fa-toggle-off");
   musicPlayer.classList.toggle("dark");
 });
 
-prevsongButton.addEventListener("click", function () {
+//previous button logic
+prevsongButton.addEventListener("click", () => {
   if (currentsongIndex === 0) {
     return;
   }
   currentsongIndex--;
   updateSong();
-
+  audio.play();
 });
 
-nextsongButton.addEventListener("click", function () {
+function nextMusic(){
   if (currentsongIndex === songs.length - 1) {
     return;
   }
   currentsongIndex++;
   updateSong();
-});
+  audio.play();
+}
+//next button logic
+nextsongButton.addEventListener("click", nextMusic);
 
+//play-pause button logic
 audio.addEventListener("play", () => {
   playpauseButton.classList.remove("fa-circle-play");
   playpauseButton.classList.add("fa-circle-pause");
@@ -80,16 +91,20 @@ playpauseButton.addEventListener("click", () => {
   }
 });
 
-
-shuffleButton.addEventListener("click", function () {
-  currentsongIndex = Math.floor(Math.random() * (songsLen + 1));
+//shuffle button logic
+shuffleButton.addEventListener("click", () => {
+  currentsongIndex = Math.floor(Math.random() * ((songs.length-1) + 1));
   updateSong()
+  audio.play()
 });
 
-repeatButton.addEventListener("click", function () {
-  audio.loop = !audio.loop;
+//repeat button logic
+repeatButton.addEventListener("click", () => {
+  const isRepeatOn = repeatButton.classList.toggle('repeat');
+  audio.loop = isRepeatOn;
 });
 
+//update song logic
 function updateSong() {
   const song = songs[currentsongIndex];
   songImage.src = song.image;
@@ -97,28 +112,26 @@ function updateSong() {
   songArtist.innerText = song.artist;
 
   audio.src = song.audio;
-  playpauseButton.classList.remove("fa-circle-pause");
-  playpauseButton.classList.add("fa-circle-play");
-  audio.onloadedmetadata = function () {
+
+  localStorage.setItem("lastSongIndex", currentsongIndex);
+  
+
+  audio.addEventListener('loadedmetadata', () => {
     songSlider.value = 0;
     songSlider.max = audio.duration;
-  };
+  }) 
 }
 
-function autoPlay(){
-  currentsongIndex++;
-  if(currentsongIndex > songs.length - 1) return;
-  updateSong()
-  audio.play()
-}
-audio.addEventListener('ended', autoPlay)
+audio.addEventListener('ended', () => {
+  if(!audio.loop){
+    nextMusic();
+  }
+});
 
-songSlider.addEventListener("change", function () {
+songSlider.addEventListener("input", () => {
   audio.currentTime = songSlider.value;
 });
 
-function moveSlider() {
+audio.addEventListener("timeupdate", () => {
   songSlider.value = audio.currentTime;
-}
-
-setInterval(moveSlider, 1000);
+});

@@ -104,3 +104,8 @@ body {
 .dark {
   background: #23243e;
 }
+
+.repeat{
+  background-color: #2563EB;
+  border-radius: 50%;
+}
